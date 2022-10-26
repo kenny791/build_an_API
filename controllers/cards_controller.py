@@ -8,6 +8,15 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 cards = Blueprint('cards', __name__, url_prefix="/cards")
 
+# The GET routes endpoint
+@cards.route("/", methods=["GET"])
+def get_cards():
+    # get all the cards from the database table
+    cards_list = Card.query.all()
+    # Convert the cards from the database into a JSON format and store them in result
+    result = cards_schema.dump(cards_list)
+    # return the data in JSON format
+    return jsonify(result)
 
 # The GET routes endpoint
 @cards.route("/search", methods=["GET"])
