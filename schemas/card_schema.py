@@ -6,6 +6,7 @@ class CardSchema(ma.Schema):
     user = fields.Nested("UserSchema", only=("email",))
 
     class Meta:
+        ordered = True
         # Fields to expose
         fields = ("id", "title", "description", "date", "status", "priority", "user")
 
