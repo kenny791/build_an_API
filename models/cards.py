@@ -11,3 +11,7 @@ class Card(db.Model):
     date = db.Column(db.Date())
     status = db.Column(db.String())
     priority = db.Column(db.String())
+    user_id = db.Column(db.Integer, db.ForeignKey('USERS.id'), nullable=False)
+    
+    user = db.relationship ("User", back_populates='cards')
+

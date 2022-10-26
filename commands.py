@@ -16,30 +16,6 @@ def create_db():
 
 @db_commands .cli.command("seed")
 def seed_db():
-    # create the card object
-    card1 = Card(
-        # set the attributes, not the id, SQLAlchemy will manage that for us
-        title = "Start the project",
-        description = "Stage 1, creating the database",
-        status = "To Do",
-        priority = "High",
-        date = date.today()
-    )
-    # Add the object as a new row to the table
-    db.session.add(card1)
-
-    card2 = Card(
-        # set the attributes, not the id, SQLAlchemy will manage that for us
-        title = "SQLAlchemy and Marshmallow",
-        description = "Stage 2, integrate both modules in the project",
-        status = "Ongoing",
-        priority = "High",
-        date = date.today()
-    )
-    # Add the object as a new row to the table
-    db.session.add(card2)
-
-
     admin_user = User(
         email = "admin@email.com",
         password = bcrypt.generate_password_hash("password123").decode("utf-8"),
@@ -53,6 +29,33 @@ def seed_db():
     )
     db.session.add(user1)
     # commit the changes
+    db.session.commit()
+
+
+    # create the card object
+    card1 = Card(
+        # set the attributes, not the id, SQLAlchemy will manage that for us
+        title = "Start the project",
+        description = "Stage 1, creating the database",
+        status = "To Do",
+        priority = "High",
+        date = date.today(),
+        user = user1
+    )
+    # Add the object as a new row to the table
+    db.session.add(card1)
+
+    card2 = Card(
+        # set the attributes, not the id, SQLAlchemy will manage that for us
+        title = "SQLAlchemy and Marshmallow",
+        description = "Stage 2, integrate both modules in the project",
+        status = "Ongoing",
+        priority = "High",
+        date = date.today(),
+        user_id = user1.id
+    )
+    # Add the object as a new row to the table
+    db.session.add(card2)
     db.session.commit()
     print("Table seeded") 
 
