@@ -9,3 +9,4 @@ class User(db.Model):
     admin = db.Column(db.Boolean(), default=False)
     
     cards = db.relationship('Card', back_populates='user', cascade='all, delete')
+    comments = db.relationship('Comment', back_populates='user', cascade='all, delete')

@@ -13,5 +13,6 @@ class Card(db.Model):
     priority = db.Column(db.String())
     user_id = db.Column(db.Integer, db.ForeignKey('USERS.id'), nullable=False)
     
-    user = db.relationship ("User", back_populates='cards')
+    user = db.relationship ('User', back_populates='cards')
+    comments = db.relationship('Comment', back_populates='card', cascade='all, delete')
 
