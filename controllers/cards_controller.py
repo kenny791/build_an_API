@@ -2,8 +2,10 @@ from flask import Blueprint, jsonify, request, abort
 from main import db
 from models.cards import Card
 from models.users import User
+from models.comments import Comment
 from schemas.card_schema import card_schema, cards_schema
 from schemas.user_schema import user_schema, users_schema
+from schemas.comment_schema import comment_schema
 from datetime import date
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -136,6 +138,42 @@ def delete_card(id):
         return abort(400, description= "Card does not exist")
     #Delete the card from the database and commit
     db.session.delete(card)
+    db.session.commit()
+    #return the card in the response
+    return jsonify(card_schema.dump(card))
+
+
+#POST a new comment
+@cards.route("/<int:id>/comments", methods=["POST"])
+# logged in user required
+@jwt_required()
+# Card id required to assign the comment to a car
+def post_comment(id):
+    # #Create a new comment
+    comment_fields = comment_schema.load(request.json)
+
+    #get the user id invoking get_jwt_identity
+    user_id = get_jwt_identity()
+    #Find it in the db
+    user = User.query.get(user_id)
+    #Make sure it is in the database
+    if not user:
+        return abort(401, description="Invalid user")
+
+    # find the card
+    card = Card.query.filter_by(id=id).first()
+    #return an error if the card doesn't exist
+    if not card:
+        return abort(400, description= "Card does not exist")
+    #create the comment with the given values
+    new_comment = Comment()
+    new_comment.message = comment_fields["message"]
+    # Use the card gotten by the id of the route
+    new_comment.card = card
+    # Use that id to set the ownership of the card
+    new_comment.user_id = user_id
+    # add to the database and commit
+    db.session.add(new_comment)
     db.session.commit()
     #return the card in the response
     return jsonify(card_schema.dump(card))
