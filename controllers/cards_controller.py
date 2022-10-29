@@ -11,6 +11,11 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 cards = Blueprint('cards', __name__, url_prefix="/cards")
 
+#catches keyerrors
+@cards.errorhandler(KeyError)
+def key_error(e):
+    return jsonify({'error': f'The field {e} is required'}), 400
+
 # The GET routes endpoint
 @cards.route("/", methods=["GET"])
 def get_cards():
