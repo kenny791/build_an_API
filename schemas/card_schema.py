@@ -1,6 +1,6 @@
 from main import ma
 from marshmallow import fields
-from marshmallow.validate import Length, OneOf
+from marshmallow.validate import Length, OneOf, Regexp, And
 
 VALID_PRIORITIES = ('Urgent', 'High', 'Low', 'Medium')
 VALID_STATUSES = ('To Do', 'Done', 'Ongoing', 'Testing', 'Deployed')
@@ -9,7 +9,7 @@ VALID_STATUSES = ('To Do', 'Done', 'Ongoing', 'Testing', 'Deployed')
 class CardSchema(ma.Schema):
     user = fields.Nested("UserSchema", only=("email",))
     comments = fields.List(fields.Nested("CommentSchema"))
-    title = fields.String(required=True, validate=Length(min=1, error='Title cannot be blank'))
+    title = fields.String(required=True, validate=And(Length(min=1), Regexp('^[a-zA-Z0-9 ]+$')))    
     status = fields.String(required=True, validate=OneOf(VALID_STATUSES))
     priority = fields.String(required=True, validate=OneOf(VALID_PRIORITIES))
     class Meta:
