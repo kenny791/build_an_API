@@ -11,7 +11,7 @@ class CardSchema(ma.Schema):
     comments = fields.List(fields.Nested("CommentSchema"))
     title = fields.String(required=True, validate=And(Length(min=1), Regexp('^[a-zA-Z0-9 ]+$')))    
     status = fields.String(required=True, validate=OneOf(VALID_STATUSES))
-    priority = fields.String(required=True, validate=OneOf(VALID_PRIORITIES))
+    priority = fields.String(load_default='Medium', validate=OneOf(VALID_PRIORITIES))        
     class Meta:
         ordered = True
         # Fields to expose
