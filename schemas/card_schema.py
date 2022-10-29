@@ -1,12 +1,17 @@
 from main import ma
 from marshmallow import fields
-from marshmallow.validate import Length
+from marshmallow.validate import Length, OneOf
+
+VALID_PRIORITIES = ('Urgent', 'High', 'Low', 'Medium')
+VALID_STATUSES = ('To Do', 'Done', 'Ongoing', 'Testing', 'Deployed')
 
 #create the Card Schema with Marshmallow, it will provide the serialization needed for converting the data into JSON
 class CardSchema(ma.Schema):
     user = fields.Nested("UserSchema", only=("email",))
     comments = fields.List(fields.Nested("CommentSchema"))
     title = fields.String(required=True, validate=Length(min=1, error='Title cannot be blank'))
+    status = fields.String(required=True, validate=OneOf(VALID_STATUSES))
+    priority = fields.String(required=True, validate=OneOf(VALID_PRIORITIES))
     class Meta:
         ordered = True
         # Fields to expose
