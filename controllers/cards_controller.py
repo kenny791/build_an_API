@@ -8,6 +8,7 @@ from schemas.user_schema import user_schema, users_schema
 from schemas.comment_schema import comment_schema
 from datetime import date
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from werkzeug.exceptions import BadRequest
 
 cards = Blueprint('cards', __name__, url_prefix="/cards")
 
@@ -15,6 +16,10 @@ cards = Blueprint('cards', __name__, url_prefix="/cards")
 @cards.errorhandler(KeyError)
 def key_error(e):
     return jsonify({'error': f'The field {e} is required'}), 400
+
+@cards.errorhandler(BadRequest)
+def default_error(e):
+    return jsonify({'error': e.description}), 400
 
 # The GET routes endpoint
 @cards.route("/", methods=["GET"])
