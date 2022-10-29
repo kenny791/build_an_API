@@ -6,8 +6,7 @@ from marshmallow.validate import Length
 class CardSchema(ma.Schema):
     user = fields.Nested("UserSchema", only=("email",))
     comments = fields.List(fields.Nested("CommentSchema"))
-    title = fields.String(required=True, validate=Length(min=1))
-
+    title = fields.String(required=True, validate=Length(min=1, error='Title cannot be blank'))
     class Meta:
         ordered = True
         # Fields to expose
