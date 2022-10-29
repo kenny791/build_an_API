@@ -1,10 +1,12 @@
 from main import ma
 from marshmallow import fields
+from marshmallow.validate import Length
 
 #create the Card Schema with Marshmallow, it will provide the serialization needed for converting the data into JSON
 class CardSchema(ma.Schema):
     user = fields.Nested("UserSchema", only=("email",))
     comments = fields.List(fields.Nested("CommentSchema"))
+    title = fields.String(required=True, validate=Length(min=1))
 
     class Meta:
         ordered = True

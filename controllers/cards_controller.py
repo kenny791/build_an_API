@@ -9,6 +9,7 @@ from schemas.comment_schema import comment_schema
 from datetime import date
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from werkzeug.exceptions import BadRequest
+from marshmallow.exceptions import ValidationError
 
 cards = Blueprint('cards', __name__, url_prefix="/cards")
 
@@ -20,6 +21,10 @@ def key_error(e):
 @cards.errorhandler(BadRequest)
 def default_error(e):
     return jsonify({'error': e.description}), 400
+
+@cards.errorhandler(ValidationError)
+def validation_error(e):
+    return jsonify(e.messages), 400
 
 # The GET routes endpoint
 @cards.route("/", methods=["GET"])
